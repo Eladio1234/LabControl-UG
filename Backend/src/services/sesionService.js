@@ -42,9 +42,9 @@ export const sesionService = {
     }
   },
 
-  async obtenerSesiones(estado) {
+  async obtenerSesiones(estado, page, limit) {
     await sesionService.limpiarExpiradas();
-    return await sesionRepository.obtenerPorEstado(estado);
+    return await sesionRepository.obtenerPorEstado(estado, page, limit);
   },
 
   async obtenerSesion(idSesion) {

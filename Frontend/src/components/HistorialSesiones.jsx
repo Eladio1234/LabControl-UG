@@ -6,28 +6,38 @@ export default function HistorialSesiones() {
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
   const [fechaFiltro, setFechaFiltro] = useState('');
+  const [paginaActual, setPaginaActual] = useState(1);
+  const [totalPaginas, setTotalPaginas] = useState(1);
+  const registrosPorPagina = 10; 
   const token = localStorage.getItem('token');
 
-  // Recupera el historial general de sesiones cerradas
   useEffect(() => {
     const cargarHistorial = async () => {
       setCargando(true);
       try {
-        const respuesta = await fetch('http://localhost:3000/api/sesiones', {
+        const url = `http://localhost:3000/api/sesiones?estado=cerrada&page=${paginaActual}&limit=${registrosPorPagina}`;
+        
+        const respuesta = await fetch(url, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
           }
         });
+        
         const datos = await respuesta.json();
 
         if (!respuesta.ok) throw new Error(datos.error || 'Error al cargar');
 
-        // Filtra y ordena las sesiones finalizadas cronológicamente
-        const cerradas = datos.filter(s => s.estado_sesion === 'cerrada');
-        cerradas.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-        setSesiones(cerradas);
+        if (datos.registros) {
+          setSesiones(datos.registros);
+          setTotalPaginas(datos.totalPaginas);
+        } else {
+          const cerradas = datos.filter(s => s.estado_sesion === 'cerrada');
+          cerradas.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+          setSesiones(cerradas);
+          setTotalPaginas(1);
+        }
       } catch (err) {
         setError(err.message);
       } finally {
@@ -36,7 +46,11 @@ export default function HistorialSesiones() {
     };
 
     cargarHistorial();
-  }, []);
+  }, [paginaActual, token]); 
+
+  useEffect(() => {
+    setPaginaActual(1);
+  }, [fechaFiltro]);
 
   const formatearHora = (fechaString) => {
     if (!fechaString) return '--:--';
@@ -49,7 +63,7 @@ export default function HistorialSesiones() {
 
   const getIcono = (estado) => estado ? '✔' : '✘';
 
-  // Aplica filtro de búsqueda por fecha (año-mes-día)
+  // Aplica filtro de búsqueda por fecha (solo a los registros de la página actual)
   const sesionesFiltradas = sesiones.filter(sesion => {
     if (!fechaFiltro) return true;
     const fechaObj = new Date(sesion.created_at);
@@ -61,7 +75,7 @@ export default function HistorialSesiones() {
     window.print();
   };
 
-  if (cargando) return <p style={{ padding: '2rem' }}>Cargando historial...</p>;
+  if (cargando && sesiones.length === 0) return <p style={{ padding: '2rem' }}>Cargando historial...</p>;
   if (error) return <p style={{ color: 'red', padding: '2rem' }}>Error: {error}</p>;
 
   return (
@@ -130,7 +144,7 @@ export default function HistorialSesiones() {
             {sesionesFiltradas.length === 0 ? (
               <tr>
                 <td colSpan="14" style={{ textAlign: 'center', padding: '2rem' }}>
-                  No hay registros para mostrar.
+                  No hay registros para mostrar en esta vista.
                 </td>
               </tr>
             ) : (
@@ -138,7 +152,7 @@ export default function HistorialSesiones() {
                 <tr key={sesion.id}>
                   <td className={styles.textoIzquierda}>
                     <strong>{sesion.nombre_alumno}</strong><br/>
-                    <span className={styles.mesaSubtexto}>Mesa {sesion.mesa_id.replace('MESA-', '')} | {formatearFecha(sesion.created_at)}</span>
+                    <span className={styles.mesaSubtexto}>Mesa {sesion.mesa_id?.replace('MESA-', '')} | {formatearFecha(sesion.created_at)}</span>
                   </td>
                   <td>{formatearHora(sesion.hora_entrada)}</td>
                   
@@ -177,6 +191,32 @@ export default function HistorialSesiones() {
           </tbody>
         </table>
       </div>
+
+      {/* Interfaz de Paginación */}
+      {totalPaginas > 1 && (
+        <div className={styles.paginacionContainer}>
+          <button 
+            onClick={() => setPaginaActual(p => Math.max(1, p - 1))}
+            disabled={paginaActual === 1 || cargando}
+            className={styles.btnPaginacion}
+          >
+            Anterior
+          </button>
+          
+          <span className={styles.textoPaginacion}>
+            Página <strong>{paginaActual}</strong> de <strong>{totalPaginas}</strong>
+          </span>
+          
+          <button 
+            onClick={() => setPaginaActual(p => Math.min(totalPaginas, p + 1))}
+            disabled={paginaActual === totalPaginas || cargando}
+            className={styles.btnPaginacion}
+          >
+            Siguiente
+          </button>
+        </div>
+      )}
+
     </div>
   );
 }

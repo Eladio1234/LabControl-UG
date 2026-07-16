@@ -44,26 +44,33 @@ export const sesionRepository = {
     return data;
   },
 
-  async obtenerPorEstado(estado) {
+  async obtenerPorEstado(estado, page, limit) {
     let query = supabase
       .from('sesiones_laboratorio')
       .select(`
         *,
         perfiles_admin ( firma_url )
-      `)
+      `, { count: 'exact' })
       .order('created_at', { ascending: false });
 
     if (estado) {
       query = query.eq('estado_sesion', estado);
     }
 
-    const { data, error } = await query;
+    // Si recibimos los parámetros de paginación, aplicamos el rango
+    if (page && limit) {
+      const start = (page - 1) * limit;
+      const end = start + limit - 1;
+      query = query.range(start, end);
+    }
+
+    const { data, error, count } = await query;
 
     if (error) {
       throw error;
     }
-
-    return data;
+    
+    return { data, count };
   },
 
   async obtenerExpiradas() {

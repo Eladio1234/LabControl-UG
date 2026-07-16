@@ -154,11 +154,21 @@ export const sesionController = {
 
   async obtenerSesiones(req, res) {
     try {
-      const { estado } = req.query;
+      const { estado, page, limit } = req.query;
+      const pageNum = page ? parseInt(page) : undefined;
+      const limitNum = limit ? parseInt(limit) : undefined;
+      const resultado = await sesionService.obtenerSesiones(estado, pageNum, limitNum);
 
-      const sesiones = await sesionService.obtenerSesiones(estado);
-
-      res.status(200).json(sesiones);
+      if (pageNum && limitNum) {
+        res.status(200).json({
+          registros: resultado.data,
+          totalRegistros: resultado.count,
+          paginaActual: pageNum,
+          totalPaginas: Math.ceil(resultado.count / limitNum)
+        });
+      } else {
+        res.status(200).json(resultado.data);
+      }
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
