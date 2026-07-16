@@ -1,0 +1,347 @@
+.container {
+    background: white;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.mainTitle {
+    color: #0f172a;
+    margin-top: 0;
+    margin-bottom: 2rem;
+    font-weight: 800;
+}
+
+.formSection {
+    background: #f8fafc;
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    margin-bottom: 2.5rem;
+}
+
+.sectionTitle {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    color: #0f172a;
+}
+
+.gridForm {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-width: 0;
+}
+
+.inputGroup label {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #475569;
+    text-transform: uppercase;
+}
+
+.inputGroup input,
+.inputGroup select {
+    width: 100%;
+    padding: 0.8rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    box-sizing: border-box;
+    transition: all 0.2s;
+}
+
+/* Resalta el campo seleccionado */
+
+.inputGroup input:focus,
+.inputGroup select:focus {
+    border-color: #2563eb;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.inputGroup select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23475569%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 0.65rem auto;
+}
+
+.actionRow {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0.5rem;
+}
+
+.btnSubmit {
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btnSubmit:hover {
+    background: #1d4ed8;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
+}
+
+.alert {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.error {
+    background: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+.exito {
+    background: #f0fdf4;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+}
+
+.info {
+    background: #eff6ff;
+    color: #1e40af;
+    border: 1px solid #bfdbfe;
+}
+
+.tableTitle {
+    margin-bottom: 1rem;
+    color: #0f172a;
+}
+
+.loadingText {
+    color: #64748b;
+    font-style: italic;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th {
+    padding: 1rem;
+    text-align: left;
+    background: #f8fafc;
+    color: #64748b;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.table td {
+    padding: 1rem;
+    color: #334155;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.nameCell {
+    font-weight: 700;
+}
+
+.badge {
+    padding: 0.3rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.badgeSuper {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.badgeAdmin {
+    background: #e0e7ff;
+    color: #3730a3;
+}
+
+/* --- BOTONES DE ACCIÓN EN TABLA --- */
+.actionsCell { 
+    display: flex; 
+    gap: 0.5rem; 
+}
+
+.btnEdit, .btnDelete { 
+    background: white; 
+    border: 1px solid #e2e8f0; 
+    border-radius: 8px; 
+    padding: 0.5rem; 
+    cursor: pointer; 
+    transition: all 0.2s ease; 
+    font-size: 1rem; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btnEdit:hover { 
+    background: #eff6ff; 
+    border-color: #93c5fd; 
+    transform: translateY(-2px);
+}
+
+.btnDelete:hover { 
+    background: #fef2f2; 
+    border-color: #fca5a5; 
+    transform: translateY(-2px);
+}
+
+/* --- MODAL DE EDICIÓN --- */
+.modalOverlay { 
+    position: fixed; 
+    inset: 0; 
+    background: rgba(15, 23, 42, 0.7); 
+    backdrop-filter: blur(4px); 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    z-index: 1000; 
+    padding: 1rem; 
+}
+
+.modalContent { 
+    background: white; 
+    padding: 2rem; 
+    border-radius: 16px; 
+    width: 100%; 
+    max-width: 450px; 
+    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); 
+}
+
+.modalContent h3 { 
+    margin-top: 0; 
+    color: #0f172a; 
+    margin-bottom: 1.5rem; 
+    font-weight: 800;
+}
+
+.modalForm { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 1.2rem; 
+}
+
+.modalActions { 
+    display: flex; 
+    gap: 1rem; 
+    margin-top: 1rem; 
+}
+
+.btnCancel { 
+    flex: 1; 
+    padding: 0.9rem; 
+    background: #f1f5f9; 
+    border: none; 
+    border-radius: 8px; 
+    color: #475569; 
+    font-weight: 700; 
+    cursor: pointer; 
+    transition: 0.2s;
+}
+
+.btnCancel:hover {
+    background: #e2e8f0;
+}
+
+.btnSubmitModal { 
+    flex: 1; 
+    padding: 0.9rem; 
+    background: #2563eb; 
+    border: none; 
+    border-radius: 8px; 
+    color: white; 
+    font-weight: 700; 
+    cursor: pointer; 
+    transition: 0.2s;
+}
+
+.btnSubmitModal:hover { 
+    background: #1d4ed8; 
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .gridForm {
+        grid-template-columns: 1fr;
+    }
+
+    .actionRow {
+        justify-content: stretch;
+    }
+
+    .btnSubmit {
+        width: 100%;
+        padding: 1rem;
+    }
+
+    /* La tabla pasa a tarjetas */
+
+    .table thead {
+        display: none;
+    }
+
+    .table,
+    .table tbody,
+    .table tr,
+    .table td {
+        display: block;
+        width: 100%;
+    }
+
+    .table tr {
+        background: white;
+        margin-bottom: 1rem;
+        padding: 1rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    }
+
+    .table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+        padding: 0.8rem 0;
+        text-align: right;
+        word-break: break-word;
+        border: none;
+        border-bottom: 1px solid #f8fafc;
+    }
+
+    .table td:last-child {
+        border-bottom: none;
+    }
+
+    .table td::before {
+        content: attr(data-label);
+        margin-top: 3px;
+        flex-shrink: 0;
+        color: #475569;
+        font-size: 0.75rem;
+        font-weight: 800;
+    }
+}

@@ -1,0 +1,151 @@
+.container {
+    background: white;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.tableWrapper {
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.table th {
+    padding: 1rem;
+    background: #f8fafc;
+    color: #64748b;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    border-bottom: 2px solid #e2e8f0;
+    vertical-align: middle;
+}
+
+.table td {
+    padding: 1.25rem 1rem;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+}
+
+/* Mantiene las acciones alineadas */
+.table th:last-child,
+.table td:last-child {
+    text-align: right;
+}
+
+.cellMain {
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 4px;
+}
+
+.cellSub {
+    font-size: 0.75rem;
+    color: #94a3b8;
+}
+
+.badgeMesa {
+    background: #eff6ff;
+    color: #1e40af;
+    padding: 0.25rem 0.75rem;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.8rem;
+}
+
+.badgeEstado {
+    background: #fef3c7;
+    color: #b45309;
+    padding: 0.25rem 0.75rem;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.btnAprobar,
+.btnRechazar {
+    padding: 0.6rem 1rem;
+    border-radius: 6px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.btnAprobar {
+    background: #16a34a;
+    color: white;
+}
+
+.btnAprobar:hover {
+    background: #15803d;
+}
+
+.btnRechazar {
+    background: #dc2626;
+    color: white;
+}
+
+.btnRechazar:hover {
+    background: #b91c1c;
+}
+
+.btnRefresh {
+    background: white;
+    border: 1px solid #e2e8f0;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #475569;
+    font-weight: 600;
+}
+
+.cellMesaMovil {
+    display: none;
+    margin-top: 4px;
+}
+
+@media (max-width: 600px) {
+    .hideMobile {
+        display: none;
+    }
+
+    .cellMesaMovil {
+        display: block;
+    }
+
+    /* Los botones se acomodan uno debajo del otro */
+    .actions {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .table td:last-child {
+        text-align: center;
+    }
+
+    .btnAprobar,
+    .btnRechazar {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.75rem;
+    }
+}

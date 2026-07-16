@@ -1,0 +1,302 @@
+.dashboardLayout {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    max-width: 100%;
+    background-color: #f1f5f9;
+    font-family: 'Inter', system-ui, sans-serif;
+    overflow: hidden;
+}
+
+/* Barra lateral */
+
+.sidebar {
+    width: 280px;
+    background: linear-gradient(180deg, #0f172a 0%, #1e3a8a 100%);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 50;
+    box-shadow: 4px 0 25px rgba(15, 23, 42, 0.5);
+}
+
+.logoArea {
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.logoContenedor {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logoIcono {
+    width: 24px;
+    height: 24px;
+    color: #60a5fa;
+}
+
+.logoArea h2 {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+}
+
+.badge {
+    background-color: rgba(37, 99, 235, 0.3);
+    color: #93c5fd;
+    border: 1px solid rgba(96, 165, 250, 0.3);
+    font-size: 0.75rem;
+    font-weight: 800;
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+}
+
+.navMenu {
+    flex: 1;
+    padding: 1.5rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    overflow-y: auto;
+}
+
+.navItem {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 0.9rem 1rem;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    text-align: left;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #cbd5e1;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.navItem svg {
+    width: 18px;
+    height: 18px;
+    opacity: 0.7;
+    transition: all 0.2s ease;
+}
+
+.navItem:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #ffffff;
+}
+
+.navItem:hover svg {
+    opacity: 1;
+    color: #60a5fa;
+}
+
+.navItem.active {
+    background-color: rgba(37, 99, 235, 0.2);
+    color: #ffffff;
+    font-weight: 600;
+    border-left: 4px solid #3b82f6;
+    border-radius: 4px 8px 8px 4px;
+}
+
+.navItem.active svg {
+    opacity: 1;
+    color: #60a5fa;
+}
+
+.userArea {
+    padding: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #2563eb;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.2rem;
+    box-shadow: 0 0 10px rgba(37, 99, 235, 0.5);
+    border: 2px solid #60a5fa;
+}
+
+.userInfo {
+    flex: 1;
+    overflow: hidden;
+}
+
+.userName {
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #ffffff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.userRole {
+    margin: 0;
+    font-size: 0.75rem;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Área principal */
+
+.mainContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: calc(100vw - 280px);
+    overflow: hidden;
+}
+
+.topHeader {
+    height: 70px;
+    min-height: 70px;
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    border-bottom: 1px solid #e2e8f0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    z-index: 10;
+}
+
+.headerIzquierda {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.topHeader h1 {
+    margin: 0;
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.5px;
+}
+
+.menuToggleBtn {
+    display: none;
+    background: transparent;
+    border: none;
+    color: #1e3a8a;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 6px;
+}
+
+.logoutBtn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #fef2f2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.logoutBtn:hover {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+/* Contenido de cada vista */
+
+.contenedorVista {
+    flex: 1;
+    padding: 2rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+    width: 100%;
+}
+
+.overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(3px);
+    z-index: 40;
+}
+
+@media (max-width: 1024px) {
+    .contenedorVista {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .mainContent {
+        width: 100vw;
+    }
+
+    .menuToggleBtn {
+        display: flex;
+    }
+
+    .overlay {
+        display: block;
+    }
+
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        transform: translateX(-100%);
+    }
+
+    .sidebarAbierto {
+        transform: translateX(0);
+    }
+
+    .topHeader {
+        padding: 0 1rem;
+    }
+
+    .topHeader h1 {
+        font-size: 1.1rem;
+    }
+
+    .logoutBtn span {
+        display: none;
+    }
+
+    .logoutBtn {
+        padding: 0.5rem;
+    }
+
+    .contenedorVista {
+        padding: 1rem;
+    }
+}

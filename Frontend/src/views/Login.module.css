@@ -1,0 +1,309 @@
+@keyframes slideUpFade {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes pulseGradient {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.contenedorPrincipal {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+    background-color: #f1f5f9;
+    font-family: "Inter", system-ui, sans-serif;
+}
+
+.seccionMarca {
+    flex: 1.2;
+    background: linear-gradient(-45deg, #0f172a, #1e3a8a, #1e40af, #0f172a);
+    background-size: 400% 400%;
+    animation: pulseGradient 15s ease infinite;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 4rem;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Fondo decorativo */
+
+.seccionMarca::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px);
+    background-size: 24px 24px;
+    z-index: 1;
+}
+
+.marcaContenido {
+    position: relative;
+    z-index: 2;
+    max-width: 500px;
+    animation: slideUpFade 0.8s ease-out;
+}
+
+.logoIcono {
+    color: #60a5fa;
+    margin-bottom: 1.5rem;
+    filter: drop-shadow(0 0 10px rgba(96, 165, 250, 0.4));
+}
+
+.tituloMarca {
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin: 0;
+    letter-spacing: -1px;
+    line-height: 1.1;
+    background: linear-gradient(to right, #ffffff, #93c5fd);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.lineaDecorativa {
+    width: 60px;
+    height: 4px;
+    background-color: #3b82f6;
+    border-radius: 2px;
+    margin: 1.5rem 0;
+}
+
+.subtituloMarca {
+    font-size: 1.15rem;
+    line-height: 1.6;
+    color: #bfdbfe;
+    font-weight: 300;
+}
+
+.seccionFormulario {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.tarjetaLogin {
+    width: 100%;
+    max-width: 440px;
+    background: white;
+    padding: 3rem;
+    border-radius: 24px;
+    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.05),
+        0 0 0 1px rgba(0, 0, 0, 0.02);
+    animation: slideUpFade 0.6s ease-out 0.2s both;
+}
+
+.encabezadoFormulario {
+    margin-bottom: 2rem;
+}
+
+.tituloFormulario {
+    font-size: 2rem;
+    color: #0f172a;
+    margin: 0 0 0.5rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.textoInstruccion {
+    color: #64748b;
+    margin: 0;
+    font-size: 1rem;
+}
+
+.formulario {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.grupoInput {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.grupoInput label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.contenedorInputWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.iconoInput {
+    position: absolute;
+    left: 14px;
+    width: 20px;
+    height: 20px;
+    color: #94a3b8;
+    transition: color 0.2s ease;
+}
+
+.contenedorInputWrapper input {
+    width: 100%;
+    padding: 0.9rem 1rem 0.9rem 2.8rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 1rem;
+    color: #0f172a;
+    background-color: #f8fafc;
+    transition: all 0.2s ease;
+}
+
+/* Resalta el input cuando recibe el foco */
+
+.contenedorInputWrapper input:focus {
+    outline: none;
+    border-color: #2563eb;
+    background-color: white;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
+}
+
+.contenedorInputWrapper input:focus + .iconoInput,
+.contenedorInputWrapper input:not(:placeholder-shown) ~ .iconoInput {
+    color: #2563eb;
+}
+
+.botonAcceso {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: linear-gradient(to right, #1e3a8a, #2563eb);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+.botonAcceso:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+}
+
+.botonAcceso:active:not(:disabled) {
+    transform: translateY(1px);
+}
+
+.botonAcceso:disabled {
+    background: #94a3b8;
+    box-shadow: none;
+    cursor: not-allowed;
+}
+
+.loaderContenedor {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.spinner {
+    width: 18px;
+    height: 18px;
+    animation: spin 1s linear infinite;
+}
+
+.mensajeError {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #fef2f2;
+    color: #b91c1c;
+    padding: 1rem;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border: 1px solid #fecaca;
+    animation: slideUpFade 0.3s ease;
+}
+
+.pieFormulario {
+    margin-top: 2.5rem;
+    text-align: center;
+    font-size: 0.85rem;
+    color: #94a3b8;
+}
+
+@media (max-width: 1024px) {
+    .seccionMarca {
+        padding: 3rem;
+    }
+
+    .tituloMarca {
+        font-size: 2.8rem;
+    }
+
+    .tarjetaLogin {
+        padding: 2.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .contenedorPrincipal {
+        flex-direction: column;
+    }
+
+    .seccionMarca {
+        flex: none;
+        padding: 4rem 1.5rem 6rem;
+        align-items: center;
+        text-align: center;
+    }
+
+    .lineaDecorativa {
+        margin: 1.5rem auto;
+    }
+
+    .seccionFormulario {
+        padding: 0 1.5rem 2rem;
+        align-items: flex-start;
+    }
+
+    /* Hace que la tarjeta se monte sobre el fondo azul */
+
+    .tarjetaLogin {
+        margin-top: -80px;
+        position: relative;
+        z-index: 10;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    }
+}

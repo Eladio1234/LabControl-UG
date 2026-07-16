@@ -1,0 +1,412 @@
+.contenedorPrincipal {
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    width: 100%;
+}
+
+.encabezado {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.encabezado h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.filtros {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.btnFiltro {
+    padding: 0.5rem 1.2rem;
+    border-radius: 20px;
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    color: #475569;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btnFiltro:hover {
+    background: #f1f5f9;
+    border-color: #94a3b8;
+}
+
+.btnFiltroActivo {
+    background: #1e3a8a;
+    color: #ffffff;
+    border-color: #1e3a8a;
+}
+
+.btnFiltroActivo:hover {
+    background: #1e40af;
+}
+
+/* Tarjetas de las mesas */
+.gridMesas {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.5rem;
+}
+
+.mesaCard {
+    padding: 1.5rem;
+    border-radius: 12px;
+    border-width: 2px;
+    border-style: solid;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.mesaCard:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.mesaTitulo {
+    font-size: 1.25rem;
+    font-weight: 900;
+    margin-bottom: 0.25rem;
+}
+
+.mesaEstado {
+    font-size: 0.75rem;
+    font-weight: 700;
+    opacity: 0.8;
+    letter-spacing: 0.5px;
+}
+
+.mesaUsuario {
+    margin-top: 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding-top: 1rem;
+    border-top: 1px dashed rgba(0, 0, 0, 0.1);
+}
+
+.modalOverlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+}
+
+.modalContent {
+    background: #ffffff;
+    border-radius: 20px;
+    max-width: 600px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    animation: modalIn 0.3s ease-out;
+}
+
+@keyframes modalIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.modalHeader {
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 10;
+}
+
+.modalHeader h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: #0f172a;
+}
+
+.btnCerrarModal {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    line-height: 1;
+    color: #94a3b8;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.btnCerrarModal:hover {
+    color: #ef4444;
+}
+
+/* Equipos asignados */
+.equiposGrid {
+    display: flex;
+    gap: 10px;
+    padding: 1.5rem 2rem 0 2rem;
+    overflow-x: auto;
+}
+
+.equipoItem {
+    flex: 1;
+    min-width: 80px;
+    background: #f8fafc;
+    padding: 0.75rem;
+    border-radius: 8px;
+    text-align: center;
+    border: 1px solid #e2e8f0;
+}
+
+.equipoItem img {
+    height: 40px;
+    object-fit: contain;
+    margin-bottom: 0.5rem;
+}
+
+.equipoItem span {
+    display: block;
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: #475569;
+}
+
+.modalBody {
+    padding: 1.5rem 2rem 2rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.seccionMantenimiento {
+    background: #fef2f2;
+    padding: 1.25rem;
+    border-radius: 12px;
+    border: 1px solid #fca5a5;
+}
+
+.seccionMantenimiento label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #b91c1c;
+    margin-bottom: 0.5rem;
+}
+
+.seccionMantenimiento textarea {
+    width: 100%;
+    min-height: 80px;
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: 1px solid #fca5a5;
+    background: white;
+    font-family: inherit;
+    resize: vertical;
+}
+
+.seccionKit {
+    background: #f8fafc;
+    padding: 1.25rem;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+}
+
+.kitHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.kitHeader label {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #334155;
+}
+
+.btnAñadirKit {
+    background: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btnAñadirKit:hover {
+    background: #2563eb;
+}
+
+.listaKit {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.kitItemRow {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.inputNombre {
+    flex: 1;
+    padding: 0.6rem;
+    border-radius: 6px;
+    border: 1px solid #cbd5e1;
+    font-size: 0.9rem;
+}
+
+.inputCantidad {
+    width: 70px;
+    padding: 0.6rem;
+    border-radius: 6px;
+    border: 1px solid #cbd5e1;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.btnEliminarKit {
+    background: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    width: 36px;
+    height: 36px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btnEliminarKit:hover {
+    background: #dc2626;
+}
+
+.kitVacio {
+    font-size: 0.85rem;
+    color: #64748b;
+    text-align: center;
+    margin: 1rem 0;
+}
+
+.seccionSesion {
+    background: #eff6ff;
+    padding: 1.25rem;
+    border-radius: 12px;
+    border: 1px solid #bfdbfe;
+}
+
+.seccionSesion strong {
+    color: #1e40af;
+    display: block;
+}
+
+.seccionSesion p {
+    margin: 0.5rem 0 0;
+    font-size: 0.85rem;
+    font-style: italic;
+    color: #3b82f6;
+}
+
+/* Acciones del modal */
+.modalAcciones {
+    display: flex;
+    gap: 15px;
+    margin-top: 1rem;
+}
+
+.btnCancelar,
+.btnGuardar {
+    flex: 1;
+    padding: 0.85rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btnCancelar {
+    background: white;
+    border: 1px solid #cbd5e1;
+    color: #475569;
+}
+
+.btnCancelar:hover {
+    background: #f1f5f9;
+}
+
+.btnGuardar {
+    background: #10b981;
+    border: none;
+    color: white;
+}
+
+.btnGuardar:hover:not(:disabled) {
+    background: #059669;
+    transform: translateY(-2px);
+}
+
+.btnGuardar:disabled {
+    background: #9ca3af;
+    cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+    .contenedorPrincipal {
+        padding: 1.5rem 1rem;
+    }
+
+    .modalHeader,
+    .modalBody,
+    .equiposGrid {
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
+    }
+
+    .kitItemRow {
+        flex-wrap: wrap;
+    }
+
+    .inputNombre {
+        width: 100%;
+        flex: none;
+    }
+}

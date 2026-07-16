@@ -1,0 +1,540 @@
+/* Contenedores Principales */
+.pantallaCompleta {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 1rem;
+  background-color: #f8fafc;
+  /* Efecto de cuadrícula tecnológica (Blueprint sutil) */
+  background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+  background-size: 20px 20px;
+  box-sizing: border-box;
+}
+
+.tarjetaCentrada {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  /* Sombra azulada y borde superior tecnológico */
+  box-shadow: 0 10px 30px -5px rgba(37, 99, 235, 0.15);
+  border-top: 4px solid #3b82f6;
+  width: 100%;
+  max-width: 500px;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.tarjetaAncha {
+  background: #fff;
+  padding: 3rem;
+  border-radius: 12px;
+  /* Sombra azulada y borde superior tecnológico */
+  box-shadow: 0 10px 30px -5px rgba(37, 99, 235, 0.15);
+  border-top: 4px solid #3b82f6;
+  width: 100%;
+  max-width: 800px;
+  box-sizing: border-box;
+}
+
+/* Tipografía y Textos */
+.iconoGrande {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  /* Efecto de brillo en el icono */
+  filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.3));
+}
+
+.tituloCentrado {
+  color: #1e3a8a;
+  margin: 0 0 1rem 0;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.textoSecundario {
+  color: #475569;
+  margin-bottom: 1.5rem;
+}
+
+.textoCargando {
+  text-align: center;
+  padding: 3rem;
+  color: #3b82f6;
+  font-size: 1.1rem;
+  font-weight: 600;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .5; }
+}
+
+/* Formularios e Inputs Generales */
+.labelForm {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.85rem;
+  color: #334155;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-align: left;
+}
+
+.inputGeneral {
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  background-color: #f8fafc;
+  font-size: 1rem;
+  box-sizing: border-box;
+  width: 100%;
+  font-family: inherit;
+  transition: all 0.3s ease;
+}
+
+.inputGeneral:focus {
+  outline: none;
+  border-color: #3b82f6;
+  background-color: #fff;
+  /* Resplandor azul al escribir */
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+}
+
+.textareaForm {
+  width: 100%;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  background-color: #f8fafc;
+  min-height: 100px;
+  box-sizing: border-box;
+  resize: vertical;
+  font-family: inherit;
+  margin-bottom: 0;
+  margin-top: 1rem;
+  transition: all 0.3s ease;
+}
+
+.textareaForm:focus {
+  outline: none;
+  border-color: #3b82f6;
+  background-color: #fff;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+}
+
+/* NIP y Bloqueo */
+.inputNip {
+  /* Fuente tipo terminal para los números */
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 2.5rem;
+  letter-spacing: 1rem;
+  text-align: center;
+  width: 100%;
+  max-width: 250px;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 2px solid #94a3b8;
+  background-color: #f1f5f9;
+  color: #1e3a8a;
+  margin-bottom: 1rem;
+  box-sizing: border-box;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.inputNip:focus {
+  border-color: #2563eb;
+  background-color: #fff;
+  box-shadow: 0 0 15px rgba(37, 99, 235, 0.2);
+}
+
+.errorText {
+  color: #ef4444;
+  font-weight: bold;
+  margin: 0 0 1rem 0;
+}
+
+/* Botones */
+.btnSubmit, .btnSubmitForm, .btnSubmitRegistro {
+  width: 100%;
+  padding: 1rem;
+  border-radius: 8px;
+  /* Degradado tecnológico moderno */
+  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.39);
+  transition: all 0.3s ease;
+}
+
+.btnSubmitRegistro {
+  margin-top: -5rem;
+}
+
+.btnSubmit:hover, .btnSubmitForm:hover, .btnSubmitRegistro:hover {
+  background: linear-gradient(135deg, #172554 0%, #2563eb 100%);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
+  transform: translateY(-2px);
+}
+
+.btnSubmitRegistro:disabled {
+  background: #cbd5e1;
+  box-shadow: none;
+  color: #64748b;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btnPeligro {
+  width: 100%;
+  padding: 1rem;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #991b1b 0%, #ef4444 100%);
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 14px 0 rgba(239, 68, 68, 0.39);
+  transition: all 0.3s ease;
+  margin-top: 1.5rem;
+}
+
+.btnPeligro:hover {
+  background: linear-gradient(135deg, #7f1d1d 0%, #dc2626 100%);
+  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.5);
+  transform: translateY(-2px);
+}
+
+/* Layout Formulario Validación (Checklist) */
+.headerFormulario {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.headerFormulario h1 {
+  margin: 0;
+  color: #0f172a;
+  font-size: 1.8rem;
+  font-weight: 800;
+}
+
+.headerFormulario p {
+  margin: 0.5rem 0 0 0;
+  color: #3b82f6;
+  font-weight: 500;
+}
+
+.filaInputs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.inputGroup {
+  flex: 1 1 200px;
+  display: flex;
+  flex-direction: column;
+}
+
+.subtituloForm {
+  font-size: 1.1rem;
+  color: #1e3a8a;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.gridVerificacion {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.checkboxCard {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.checkboxCard:hover {
+  border-color: #3b82f6;
+  background: #eff6ff;
+}
+
+.checkboxCard input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: #2563eb;
+}
+
+.checkboxCard span {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+.cajaNipCreacion {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #f0f9ff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px dashed #7dd3fc;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.labelNipCreacion {
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  color: #0369a1;
+  font-weight: 700;
+  text-align: center;
+}
+
+.inputNipCreacion {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1.5rem;
+  letter-spacing: 0.5rem;
+  text-align: center;
+  width: 100%;
+  max-width: 200px;
+  padding: 0.8rem;
+  border-radius: 8px;
+  border: 2px solid #38bdf8;
+  box-sizing: border-box;
+  color: #0c4a6e;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.inputNipCreacion:focus {
+  outline: none;
+  border-color: #0284c7;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+}
+
+.btnSubmitForm {
+  margin-top: 1.5rem;
+}
+
+/* Header Principal (Mesa) */
+.headerPrincipal {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+}
+
+.headerPrincipal h1 {
+  margin: 0;
+  font-size: 1.7rem;
+  color: #0f172a;
+  font-weight: 800;
+}
+
+.badgeMesa {
+  background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+  color: #fff;
+  padding: 0.4rem 1.2rem;
+  border-radius: 9999px;
+  font-weight: bold;
+  font-size: 0.9rem;
+  box-shadow: 0 2px 10px rgba(37, 99, 235, 0.2);
+}
+
+.seccionTitulo {
+  font-size: 1.1rem;
+  color: #1e3a8a;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.seccionTituloFinal {
+  font-size: 1.1rem;
+  color: #1e3a8a;
+  margin-bottom: 1rem;
+  border-top: 2px solid #e2e8f0;
+  padding-top: 1.5rem;
+  font-weight: 700;
+}
+
+/* Grid de Equipos */
+.gridEquipo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.equipoCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  flex: 1 1 120px;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.equipoCard:hover {
+  transform: translateY(-4px);
+  border-color: #93c5fd;
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.15);
+}
+
+.equipoImg {
+  width: 100%;
+  max-width: 80px;
+  height: auto;
+  margin-bottom: 0.5rem;
+  object-fit: contain;
+}
+
+.equipoIconoFallback {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+.equipoTipo {
+  font-size: 0.75rem;
+  color: #3b82f6;
+  text-transform: uppercase;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+.equipoModelo {
+  font-size: 0.9rem;
+  color: #0f172a;
+  font-weight: 600;
+}
+
+/* Lista del Kit */
+.listaKit {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.itemKit {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 1rem;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  border-left: 3px solid #3b82f6; /* Detalle tech en el borde izquierdo */
+}
+
+.itemKitNombre {
+  font-size: 0.9rem;
+  color: #334155;
+  font-weight: 500;
+}
+
+.itemCantidad {
+  font-weight: 800;
+  color: #1e40af;
+  background: #dbeafe;
+  padding: 0.2rem 0.6rem;
+  border-radius: 99px;
+  font-size: 0.8rem;
+}
+
+.kitVacio {
+  color: #64748b;
+  font-size: 0.95rem;
+  font-weight: 500;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: #f1f5f9;
+  border-radius: 8px;
+  border: 1px dashed #cbd5e1;
+  text-align: center;
+}
+
+/* Alertas y Errores */
+.cajaAlerta {
+  background: #fff1f2;
+  border: 1px solid #fecdd3;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: inset 0 2px 4px rgba(225, 29, 72, 0.05);
+}
+
+.alertaTexto {
+  margin: 0 0 0.5rem 0;
+  color: #e11d48;
+  font-size: 0.9rem;
+}
+
+.alertaCheckbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: #9f1239;
+  font-weight: 600;
+}
+
+.alertaCheckbox input {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: #e11d48;
+}
+
+.errorMsg {
+  background: #fef2f2;
+  color: #991b1b;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  border: 1px solid #f87171;
+  font-weight: 500;
+  box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.1);
+}
+
+/* Formulario Registro */
+.formularioRegistro {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}

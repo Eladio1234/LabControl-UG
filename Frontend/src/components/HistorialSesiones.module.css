@@ -1,0 +1,193 @@
+.contenedorPrincipal {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.seccionControles {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.acciones {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.filtroCaja {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: #f8fafc;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+.filtroCaja label {
+    font-weight: 600;
+    color: #475569;
+    font-size: 0.9rem;
+}
+
+.filtroCaja input {
+    padding: 0.4rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+}
+
+.btnLimpiar {
+    background: #ef4444;
+    color: white;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+
+.btnImprimir {
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btnImprimir:hover {
+    background: #1d4ed8;
+}
+
+/* Tabla de la bitácora */
+
+.tablaWrapper {
+    overflow-x: auto;
+}
+
+.tablaBitacora {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    font-size: 0.85rem;
+}
+
+.tablaBitacora th,
+.tablaBitacora td {
+    border: 1px solid #cbd5e1;
+    padding: 0.6rem 0.4rem;
+}
+
+.tablaBitacora th {
+    background-color: #f1f5f9;
+    color: #334155;
+    font-weight: 600;
+}
+
+.bordeGrosor {
+    border-bottom: 2px solid #94a3b8 !important;
+}
+
+.subHeader {
+    font-size: 0.75rem;
+    background-color: #f8fafc !important;
+    color: #64748b !important;
+}
+
+.textoIzquierda {
+    text-align: left !important;
+    min-width: 140px;
+}
+
+.mesaSubtexto {
+    font-size: 0.7rem;
+    color: #64748b;
+}
+
+.ok {
+    color: #166534;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.fallo {
+    color: #991b1b;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.firmaEspacio {
+    min-width: 80px;
+}
+
+/* Ajustes para impresión */
+
+@media print {
+    @page {
+        size: landscape;
+        margin: 10mm;
+    }
+
+    body * {
+        visibility: hidden;
+    }
+
+    .contenedorPrincipal,
+    .contenedorPrincipal * {
+        visibility: visible;
+    }
+
+    .contenedorPrincipal {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        box-shadow: none;
+    }
+
+    .seccionControles {
+        display: none !important;
+    }
+
+    .tablaWrapper {
+        overflow: visible !important;
+    }
+
+    .tablaBitacora {
+        width: 100%;
+        font-size: 9pt;
+        color: black;
+    }
+
+    .tablaBitacora th {
+        background-color: #e2e8f0 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        color: black;
+    }
+
+    .tablaBitacora th,
+    .tablaBitacora td {
+        border: 1px solid black !important;
+        padding: 0.4rem !important;
+    }
+
+    .firmaEspacio {
+        min-width: 100px;
+    }
+
+    .ok,
+    .fallo {
+        color: black !important;
+    }
+}
