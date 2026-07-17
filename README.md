@@ -39,4 +39,4 @@ El proyecto emplea una estructura lógica dividida en dos capas principales:
 
 1. Clonar el repositorio:
    ```bash
-   git clone [https://github.com/TU_USUARIO/labcontrol-ug.git](https://github.com/TU_USUARIO/labcontrol-ug.git)
+   git clone [https://github.com/Eladio1234/LabControl-UG.git](https://github.com/Eladio1234/LabControl-UG.git)
