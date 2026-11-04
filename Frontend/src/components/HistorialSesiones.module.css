@@ -247,3 +247,46 @@
         display: none !important;
     }
 }
+
+/* Nuevo input para el filtro de mesa */
+.filtroCaja input[type="text"] {
+  padding: 0.5rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  margin-left: 0.5rem;
+  width: 120px;
+}
+
+/* Ocultar el encabezado físico en la web */
+.encabezadoImpresionOculto {
+  display: none;
+}
+
+/* Reglas especiales que solo aplican al mandar a imprimir */
+@media print {
+  .encabezadoImpresionOculto {
+    display: block;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .encabezadoImpresionOculto h1 {
+    font-size: 1.5rem;
+    margin: 0;
+  }
+  .encabezadoImpresionOculto p {
+    font-size: 1.1rem;
+    font-weight: bold;
+  }
+  
+  /* Ocultar la barra superior, botones y paginación en la hoja impresa */
+  .seccionControles,
+  .paginacionContainer {
+    display: none !important;
+  }
+
+  /* Quitar sombras de la tabla para ahorrar tinta */
+  .tablaWrapper {
+    box-shadow: none;
+    border: 1px solid #000;
+  }
+}

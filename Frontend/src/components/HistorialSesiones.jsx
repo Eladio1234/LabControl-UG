@@ -8,8 +8,10 @@ export default function HistorialSesiones() {
   const [fechaFiltro, setFechaFiltro] = useState('');
   const [paginaActual, setPaginaActual] = useState(1);
   const [totalPaginas, setTotalPaginas] = useState(1);
+  const [mesaFiltro, setMesaFiltro] = useState('');
   const registrosPorPagina = 10; 
   const token = localStorage.getItem('token');
+
 
   useEffect(() => {
     const cargarHistorial = async () => {
@@ -65,10 +67,9 @@ export default function HistorialSesiones() {
 
   // Aplica filtro de búsqueda por fecha (solo a los registros de la página actual)
   const sesionesFiltradas = sesiones.filter(sesion => {
-    if (!fechaFiltro) return true;
-    const fechaObj = new Date(sesion.created_at);
-    const fechaLocal = `${fechaObj.getFullYear()}-${String(fechaObj.getMonth() + 1).padStart(2, '0')}-${String(fechaObj.getDate()).padStart(2, '0')}`;
-    return fechaLocal === fechaFiltro;
+    const pasaFecha = fechaFiltro ? sesion.created_at.startsWith(fechaFiltro) : true;
+    const pasaMesa = mesaFiltro ? sesion.mesa_id.includes(mesaFiltro) : true;
+    return pasaFecha && pasaMesa;
   });
 
   const imprimirReporte = () => {
@@ -92,6 +93,19 @@ export default function HistorialSesiones() {
         
         <div className={styles.acciones}>
           <div className={styles.filtroCaja}>
+            {/* Nuevo input junto al filtro de fecha */}
+            <input 
+              type="text" 
+              placeholder="N° Mesa (Ej. 01)" 
+              value={mesaFiltro} 
+              onChange={(e) => setMesaFiltro(e.target.value)} 
+            />
+
+            {/* Encabezado visible SOLO al imprimir (oculto en web con CSS) */}
+            <div className={styles.encabezadoImpresionOculto}>
+              <h1>LABORATORIO DE ELECTRÓNICA DICIS</h1>
+              <p>MESA N° {mesaFiltro || '___'} FOLIO N° ___</p>
+            </div>
             <label htmlFor="filtro-fecha">Filtrar por día:</label>
             <input 
               type="date" 

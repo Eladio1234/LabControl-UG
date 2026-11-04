@@ -128,6 +128,20 @@ export default function MesasActivas() {
                 </div>
               )}
 
+
+              <div className={styles.infoRowExtra}>
+              <p><strong>Profesor Titular:</strong> {sesionCerrando.nombre_profesor}</p>
+              <p><strong>Materia:</strong> {sesionCerrando.materia}</p>
+            </div>
+
+            <h4 className={styles.sectionTitle}>Reporte inicial del alumno (Validación de Equipo):</h4>
+            <div className={styles.gridChecks}>
+              <span className={sesionCerrando.osc1_entrada ? styles.ok : styles.fallo}>Osciloscopio 1: {sesionCerrando.osc1_entrada ? 'OK' : 'Fallo'}</span>
+              <span className={sesionCerrando.osc2_entrada ? styles.ok : styles.fallo}>Osciloscopio 2: {sesionCerrando.osc2_entrada ? 'OK' : 'Fallo'}</span>
+              <span className={sesionCerrando.mult1_entrada ? styles.ok : styles.fallo}>Multímetro 1: {sesionCerrando.mult1_entrada ? 'OK' : 'Fallo'}</span>
+              <span className={sesionCerrando.mult2_entrada ? styles.ok : styles.fallo}>Multímetro 2: {sesionCerrando.mult2_entrada ? 'OK' : 'Fallo'}</span>
+            </div>
+
               <form onSubmit={handleFinalizarSesion}>
                 <h4 className={styles.sectionTitle}>Estado de Entrega del Equipo</h4>
                 <div className={styles.gridChecks}>

@@ -338,6 +338,22 @@
     box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
 }
 
+.infoRowExtra {
+  display: flex;
+  justify-content: space-between;
+  background-color: #f1f5f9;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  border-left: 4px solid #3b82f6;
+}
+
+.infoRowExtra p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #334155;
+}
+
 /* RESPONSIVO */
 
 @media (max-width: 600px) {

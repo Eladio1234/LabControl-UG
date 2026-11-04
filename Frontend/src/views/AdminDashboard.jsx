@@ -1,3 +1,5 @@
+import { supabase } from '../config/supabase.js'; // Asegúrate de importar tu cliente
+import { Toaster, toast } from 'react-hot-toast';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './AdminDashboard.module.css';
@@ -30,6 +32,29 @@ export default function AdminDashboard() {
     }
   }, [navigate]);
 
+  useEffect(() => {
+    const channel = supabase
+      .channel('sesiones_changes')
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'sesiones_laboratorio' },
+        (payload) => {
+          console.log("Cambio detectado:", payload); // Revisa esto en la consola del navegador
+          
+          if (payload.new && payload.new.mesa_id) {
+            toast(`Sesión Mesa ${payload.new.mesa_id.replace('MESA-', '')} cambió a: ${payload.new.estado_sesion}`);
+          }
+        }
+      )
+      .subscribe((status) => {
+        console.log("Estado de la suscripción a Realtime:", status);
+      });
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
   const handleLogout = () => {
     localStorage.clear();
     navigate('/auth-lab-dicis-0');
@@ -42,7 +67,7 @@ export default function AdminDashboard() {
 
   return (
     <div className={styles.dashboardLayout}>
-      
+      <Toaster position="top-right" reverseOrder={false} />
       {menuAbierto && (
         <div className={styles.overlay} onClick={() => setMenuAbierto(false)}></div>
       )}
@@ -135,7 +160,7 @@ export default function AdminDashboard() {
                'Historial de Sesiones'}
             </h1>
           </div>
-
+          
           <button className={styles.logoutBtn} onClick={handleLogout}>
             <span>Cerrar Sesión</span>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>

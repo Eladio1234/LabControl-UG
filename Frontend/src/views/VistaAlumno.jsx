@@ -33,6 +33,9 @@ export default function VistaAlumno() {
   const [nipIntento, setNipIntento] = useState('');
   const [errorNip, setErrorNip] = useState('');
 
+  // Estado para el tiempo restante en segundos (10 minutos = 600 segundos)
+  const [tiempoRestante, setTiempoRestante] = useState(600);
+
   const [formEntrada, setFormEntrada] = useState({
     nombre_profesor: '',
     materia: '',
@@ -96,6 +99,62 @@ export default function VistaAlumno() {
     }
     return () => clearInterval(intervalo);
   }, [estado, idSesion]);
+
+  // Temporizador de 10 minutos visible y controlado por segundo
+  useEffect(() => {
+    let timerExpulsion;
+    let cuentaRegresiva;
+
+    if (estado === 'formulario_entrada') {
+      setTiempoRestante(600); // Reiniciar a 10 minutos exactos al entrar
+
+      // Reduce el contador cada segundo
+      cuentaRegresiva = setInterval(() => {
+        setTiempoRestante((prev) => {
+          if (prev <= 1) {
+            clearInterval(cuentaRegresiva);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      // Expulsa al usuario al cumplirse los 10 minutos
+      timerExpulsion = setTimeout(() => {
+        alert("Tiempo límite de 10 minutos superado.");
+        window.location.reload(); 
+      }, 600000); 
+    }
+
+    return () => {
+      clearTimeout(timerExpulsion);
+      clearInterval(cuentaRegresiva);
+    };
+  }, [estado]);
+
+  // Formatear segundos a MM:SS
+  const formatearTiempo = (segundos) => {
+    const mins = Math.floor(segundos / 60);
+    const secs = segundos % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  // Temporizador 2: Alerta a la hora y media (faltan 30 min)
+  useEffect(() => {
+    let avisoCierre;
+    if (estado === 'activa' && sesionActual?.hora_entrada) {
+      const tiempoInicio = new Date(sesionActual.hora_entrada).getTime();
+      const tiempoTranscurrido = Date.now() - tiempoInicio;
+      const tiempoAviso = (90 * 60000) - tiempoTranscurrido; 
+
+      if (tiempoAviso > 0) {
+        avisoCierre = setTimeout(() => {
+          alert("⚠️ Quedan 30 minutos para finalizar. Comienza a guardar cables y solicita revisión.");
+        }, tiempoAviso);
+      }
+    }
+    return () => clearTimeout(avisoCierre);
+  }, [estado, sesionActual]);
 
   const handleSolicitar = async (e) => {
     e.preventDefault();
@@ -244,9 +303,18 @@ export default function VistaAlumno() {
   if (estado === 'formulario_entrada') return (
     <div className={styles.pantallaCompleta}>
       <div className={styles.tarjetaAncha}>
-        <div className={styles.headerFormulario}>
-          <h1>Validación de Equipo</h1>
-          <p>Prueba los accesorios antes de iniciar.</p>
+        <div className={styles.headerFormulario} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div>
+            <h1>Validación de Equipo</h1>
+            <p>Prueba los accesorios antes de iniciar.</p>
+          </div>
+          {/* Visualizador del contador regresivo */}
+          <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', padding: '0.5rem 1rem', borderRadius: '8px', textAlign: 'center' }}>
+            <span style={{ fontSize: '0.75rem', color: '#1e40af', display: 'block', fontWeight: 'bold' }}>TIEMPO RESTANTE</span>
+            <span style={{ fontSize: '1.25rem', fontFamily: 'monospace', fontWeight: 'bold', color: tiempoRestante < 60 ? '#dc2626' : '#1e3a8a' }}>
+              {formatearTiempo(tiempoRestante)}
+            </span>
+          </div>
         </div>
         
         <form onSubmit={handleEntradaSubmit} className={styles.formulario}>
