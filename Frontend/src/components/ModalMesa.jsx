@@ -2,6 +2,45 @@ import { useState, useEffect, useRef } from 'react';
 import { QRCodeCanvas } from 'qrcode.react';
 import styles from './ModalMesa.module.css';
 
+const KIT_BASE_MESA = [
+  { nombre: 'DESARMADORES (CRUZ Y PLANO)', cantidad_ideal: 2 },
+  { nombre: 'PINZAS (CORTE Y PUNTA)', cantidad_ideal: 2 },
+  { nombre: 'PLANTILLA', cantidad_ideal: 1 },
+  { nombre: 'CAIMANES', cantidad_ideal: 4 },
+  { nombre: 'PUNTAS DE OSCILOSCOPIO', cantidad_ideal: 2 },
+  { nombre: 'PUNTA DE GENERADOR', cantidad_ideal: 1 },
+  { nombre: 'PUNTAS FUENTE O MULTÍMETRO', cantidad_ideal: 4 }
+];
+
+const parsearKit = (kitObj) => {
+  if (!kitObj) return [];
+  let obj = kitObj;
+  if (typeof obj === 'string') {
+    try { obj = JSON.parse(obj); } catch (e) {}
+    if (typeof obj === 'string') {
+      try { obj = JSON.parse(obj); } catch (e) {}
+    }
+  }
+  if (Array.isArray(obj)) {
+    return obj.map(item => ({
+      nombre: item.nombre || 'Accesorio',
+      cantidad_ideal: item.cantidad_ideal ?? 1
+    }));
+  }
+  if (typeof obj === 'object' && obj !== null) {
+    return Object.entries(obj).map(([key, item]) => {
+      if (typeof item !== 'object' || item === null) {
+        return { nombre: key, cantidad_ideal: 1 };
+      }
+      return {
+        nombre: item.nombre || key,
+        cantidad_ideal: item.cantidad_ideal ?? 1
+      };
+    });
+  }
+  return [];
+};
+
 export default function ModalMesa({ onClose, onSaveSuccess, mesaAEditar = null }) {
   const [modelos, setModelos] = useState([]);
   const [cargandoModelos, setCargandoModelos] = useState(true);
@@ -17,6 +56,7 @@ export default function ModalMesa({ onClose, onSaveSuccess, mesaAEditar = null }
     generador_id: ''
   });
 
+  const [kitList, setKitList] = useState(KIT_BASE_MESA);
   const [guardando, setGuardando] = useState(false);
   const [error, setError] = useState(null);
 
@@ -29,12 +69,16 @@ export default function ModalMesa({ onClose, onSaveSuccess, mesaAEditar = null }
         if (esEdicion) {
           setForm({
             numero: mesaAEditar.numero_mesa,
-            osciloscopio_id: mesaAEditar.osciloscopio_id || '',
-            fuente_id: mesaAEditar.fuente_id || '',
-            multimetro1_id: mesaAEditar.multimetro1_id || '',
-            multimetro2_id: mesaAEditar.multimetro2_id || '',
-            generador_id: mesaAEditar.generador_id || ''
+            osciloscopio_id: mesaAEditar.osciloscopio_id || mesaAEditar.osciloscopio?.id || '',
+            fuente_id: mesaAEditar.fuente_id || mesaAEditar.fuente?.id || '',
+            multimetro1_id: mesaAEditar.multimetro1_id || mesaAEditar.multimetro1?.id || '',
+            multimetro2_id: mesaAEditar.multimetro2_id || mesaAEditar.multimetro2?.id || '',
+            generador_id: mesaAEditar.generador_id || mesaAEditar.generador?.id || ''
           });
+          const kitActual = parsearKit(mesaAEditar.kit_accesorios);
+          setKitList(kitActual.length > 0 ? kitActual : KIT_BASE_MESA);
+        } else {
+          setKitList(KIT_BASE_MESA.map(item => ({ ...item })));
         }
       } catch (err) { 
         console.error(err); 
@@ -45,6 +89,20 @@ export default function ModalMesa({ onClose, onSaveSuccess, mesaAEditar = null }
     cargarDatos();
   }, [esEdicion, mesaAEditar]);
 
+  const agregarItemKit = () => {
+    setKitList([...kitList, { nombre: '', cantidad_ideal: 1 }]);
+  };
+
+  const actualizarItemKit = (index, campo, valor) => {
+    const nuevaLista = [...kitList];
+    nuevaLista[index][campo] = valor;
+    setKitList(nuevaLista);
+  };
+
+  const eliminarItemKit = (index) => {
+    setKitList(kitList.filter((_, i) => i !== index));
+  };
+
   const generatedId = esEdicion ? mesaAEditar.id : `MESA-${form.numero.toString().padStart(2, '0')}`;
   const qrValue = `${import.meta.env.VITE_ALUMNO_APP_URL || 'http://localhost:5173'}/mesa/${generatedId}`;
 
@@ -54,13 +112,33 @@ export default function ModalMesa({ onClose, onSaveSuccess, mesaAEditar = null }
     e.preventDefault();
     setGuardando(true);
     try {
+      const kitJSON = {};
+      kitList.forEach(item => {
+        if (item.nombre && item.nombre.trim() !== '') {
+          const idInterno = item.nombre.trim().toLowerCase().replace(/\s+/g, '_');
+          kitJSON[idInterno] = {
+            nombre: item.nombre.trim(),
+            cantidad_ideal: Number(item.cantidad_ideal) || 1
+          };
+        }
+      });
+
       const res = await fetch(esEdicion ? `http://localhost:3000/api/mesas/${mesaAEditar.id}` : 'http://localhost:3000/api/mesas', {
         method: esEdicion ? 'PUT' : 'POST',
         headers: { 
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ id: generatedId, numero_mesa: parseInt(form.numero), osciloscopio_id: form.osciloscopio_id, fuente_id: form.fuente_id, multimetro1_id: form.multimetro1_id, multimetro2_id: form.multimetro2_id, generador_id: form.generador_id })
+        body: JSON.stringify({
+          id: generatedId,
+          numero_mesa: parseInt(form.numero),
+          osciloscopio_id: form.osciloscopio_id || null,
+          fuente_id: form.fuente_id || null,
+          multimetro1_id: form.multimetro1_id || null,
+          multimetro2_id: form.multimetro2_id || null,
+          generador_id: form.generador_id || null,
+          kit_accesorios: kitJSON
+        })
       });
       if (!res.ok) throw new Error('Error al guardar mesa');
       onSaveSuccess(); 
@@ -136,6 +214,47 @@ export default function ModalMesa({ onClose, onSaveSuccess, mesaAEditar = null }
               </select>
             </div>
           </div>
+
+          {/* Sección de edición de materiales genéricos / kit de accesorios */}
+          <div className={styles.kitSection}>
+            <div className={styles.kitHeader}>
+              <label>Materiales y Accesorios de la Mesa (CANT. / DESCRIPCIÓN)</label>
+              <button type="button" onClick={agregarItemKit} className={styles.btnAddKit}>
+                + Añadir Material
+              </button>
+            </div>
+            <div className={styles.kitList}>
+              {kitList.map((item, idx) => (
+                <div key={idx} className={styles.kitRow}>
+                  <input
+                    type="number"
+                    min="1"
+                    value={item.cantidad_ideal}
+                    onChange={(e) => actualizarItemKit(idx, 'cantidad_ideal', e.target.value)}
+                    className={styles.kitCantInput}
+                    title="Cantidad"
+                  />
+                  <input
+                    type="text"
+                    value={item.nombre}
+                    onChange={(e) => actualizarItemKit(idx, 'nombre', e.target.value)}
+                    placeholder="Ej. DESARMADORES (CRUZ Y PLANO)"
+                    className={styles.kitDescInput}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => eliminarItemKit(idx)}
+                    className={styles.btnRemoveKit}
+                    title="Quitar material"
+                  >
+                    &times;
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {error && <p style={{ color: '#dc2626', fontSize: '0.85rem', margin: 0 }}>{error}</p>}
 
           {/* Sección de visualización y descarga del código QR */}
           <div className={styles.qrSection}>

@@ -10,27 +10,37 @@ export const mesaRepository = {
         estado_actual,
         kit_accesorios,
         notas_mantenimiento,
+        osciloscopio_id,
+        generador_id,
+        fuente_id,
+        multimetro1_id,
+        multimetro2_id,
         osciloscopio:modelos_equipo!osciloscopio_id (
+          id,
           nombre_modelo,
           marca,
           imagen_url
         ),
         generador:modelos_equipo!generador_id (
+          id,
           nombre_modelo,
           marca,
           imagen_url
         ),
         fuente:modelos_equipo!fuente_id (
+          id,
           nombre_modelo,
           marca,
           imagen_url
         ),
         multimetro1:modelos_equipo!multimetro1_id (
+          id,
           nombre_modelo,
           marca,
           imagen_url
         ),
         multimetro2:modelos_equipo!multimetro2_id (
+          id,
           nombre_modelo,
           marca,
           imagen_url

@@ -154,17 +154,20 @@ export const sesionController = {
 
   async obtenerSesiones(req, res) {
     try {
-      const { estado, page, limit } = req.query;
+      const { estado, page, limit, mesa_id, semestre, fecha } = req.query;
       const pageNum = page ? parseInt(page) : undefined;
       const limitNum = limit ? parseInt(limit) : undefined;
-      const resultado = await sesionService.obtenerSesiones(estado, pageNum, limitNum);
+      const resultado = await sesionService.obtenerSesiones(estado, pageNum, limitNum, mesa_id, semestre, fecha);
 
       if (pageNum && limitNum) {
+        const totalPaginas = Math.max(1, Math.ceil((resultado.count || 0) / limitNum));
+        const folio = Math.max(1, totalPaginas - pageNum + 1);
         res.status(200).json({
           registros: resultado.data,
           totalRegistros: resultado.count,
           paginaActual: pageNum,
-          totalPaginas: Math.ceil(resultado.count / limitNum)
+          totalPaginas,
+          folio
         });
       } else {
         res.status(200).json(resultado.data);

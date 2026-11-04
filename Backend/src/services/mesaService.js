@@ -1,53 +1,53 @@
 import { mesaRepository } from '../repositories/mesaRepository.js';
 
-// Kit de accesorios asignado por defecto a cada mesa
+// Kit de accesorios asignado por defecto a cada mesa (basado en formato oficial DICIS)
 const KIT_POR_DEFECTO = {
-  protoboard: {
-    nombre: 'Protoboard',
-    cantidad_ideal: 1,
-    cantidad_actual: 1,
-    estado: 'ok',
-    notas: ''
-  },
-  pinzas_punta: {
-    nombre: 'Pinzas de punta',
-    cantidad_ideal: 1,
-    cantidad_actual: 1,
-    estado: 'ok',
-    notas: ''
-  },
-  tabla_madera: {
-    nombre: 'Tabla de madera (20x30cm)',
-    cantidad_ideal: 1,
-    cantidad_actual: 1,
-    estado: 'ok',
-    notas: ''
-  },
-  puntas_multimetro: {
-    nombre: 'Pares de puntas para multímetro',
+  desarmadores: {
+    nombre: 'DESARMADORES (CRUZ Y PLANO)',
     cantidad_ideal: 2,
     cantidad_actual: 2,
     estado: 'ok',
     notas: ''
   },
-  cables_generador: {
-    nombre: 'Cables para generador de funciones',
-    cantidad_ideal: 1,
-    cantidad_actual: 1,
+  pinzas: {
+    nombre: 'PINZAS (CORTE Y PUNTA)',
+    cantidad_ideal: 2,
+    cantidad_actual: 2,
     estado: 'ok',
     notas: ''
   },
-  cables_fuente: {
-    nombre: 'Pares de cables para fuente',
-    cantidad_ideal: 2,
-    cantidad_actual: 2,
+  plantilla: {
+    nombre: 'PLANTILLA',
+    cantidad_ideal: 1,
+    cantidad_actual: 1,
     estado: 'ok',
     notas: ''
   },
   caimanes: {
-    nombre: 'Caimanes',
-    cantidad_ideal: 3,
-    cantidad_actual: 3,
+    nombre: 'CAIMANES',
+    cantidad_ideal: 4,
+    cantidad_actual: 4,
+    estado: 'ok',
+    notas: ''
+  },
+  puntas_osciloscopio: {
+    nombre: 'PUNTAS DE OSCILOSCOPIO',
+    cantidad_ideal: 2,
+    cantidad_actual: 2,
+    estado: 'ok',
+    notas: ''
+  },
+  punta_generador: {
+    nombre: 'PUNTA DE GENERADOR',
+    cantidad_ideal: 1,
+    cantidad_actual: 1,
+    estado: 'ok',
+    notas: ''
+  },
+  puntas_fuente_multimetro: {
+    nombre: 'PUNTAS FUENTE O MULTÍMETRO',
+    cantidad_ideal: 4,
+    cantidad_actual: 4,
     estado: 'ok',
     notas: ''
   }

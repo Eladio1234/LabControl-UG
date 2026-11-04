@@ -80,6 +80,79 @@
     overflow: hidden;
 }
 
+.kitSection {
+    border-top: 2px solid #f1f5f9;
+    padding-top: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.kitHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.kitHeader label {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #475569;
+    text-transform: uppercase;
+}
+
+.btnAddKit {
+    background: #eff6ff;
+    color: #1e40af;
+    border: 1px solid #bfdbfe;
+    padding: 0.4rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.kitList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-height: 220px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.kitRow {
+    display: grid;
+    grid-template-columns: 70px 1fr 34px;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.kitCantInput,
+.kitDescInput {
+    padding: 0.55rem 0.65rem;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 0.85rem;
+}
+
+.kitCantInput {
+    text-align: center;
+    font-weight: 700;
+}
+
+.btnRemoveKit {
+    background: #fee2e2;
+    color: #dc2626;
+    border: none;
+    border-radius: 6px;
+    height: 34px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
 .qrSection {
     display: flex;
     flex-direction: column;
