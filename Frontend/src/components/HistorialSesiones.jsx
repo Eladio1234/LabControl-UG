@@ -57,15 +57,17 @@ const extraerAccesoriosMesa = (kitObj) => {
     }));
   }
   if (typeof obj === 'object' && obj !== null) {
-    return Object.entries(obj).map(([key, item]) => {
-      if (typeof item !== 'object' || item === null) {
-        return { cantidad: 1, descripcion: key.toUpperCase() };
-      }
-      return {
-        cantidad: item.cantidad_ideal ?? 1,
-        descripcion: (item.nombre || key).toUpperCase()
-      };
-    });
+    return Object.entries(obj)
+      .filter(([key]) => !key.startsWith('_'))
+      .map(([key, item]) => {
+        if (typeof item !== 'object' || item === null) {
+          return { cantidad: 1, descripcion: key.toUpperCase() };
+        }
+        return {
+          cantidad: item.cantidad_ideal ?? 1,
+          descripcion: (item.nombre || key).toUpperCase()
+        };
+      });
   }
   return [];
 };

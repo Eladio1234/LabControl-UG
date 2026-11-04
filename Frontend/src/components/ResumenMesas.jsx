@@ -12,6 +12,7 @@ export default function ResumenMesas() {
   const [editNotas, setEditNotas] = useState("");
   const [guardando, setGuardando] = useState(false);
   const [editKitList, setEditKitList] = useState([]);
+  const [editUsarTimer, setEditUsarTimer] = useState(true);
 
   // Carga paralela de mesas y sesiones activas utilizando el token del administrador
   const cargarDatos = useCallback(async () => {
@@ -75,7 +76,7 @@ export default function ResumenMesas() {
     setGuardando(true);
     try {
       const tokenActual = localStorage.getItem('token');
-      const kitJSON = {};
+      const kitJSON = { _usar_timer: editUsarTimer };
       
       editKitList.forEach(item => {
         if (item.nombre.trim() !== '') {
@@ -134,20 +135,24 @@ export default function ResumenMesas() {
 
     let kitArreglo = [];
     if (Array.isArray(kitObj)) {
+      setEditUsarTimer(true);
       kitArreglo = kitObj.map(item => ({
         nombre: item.nombre || 'Accesorio',
         cantidad_ideal: item.cantidad_ideal || 1
       }));
     } else if (typeof kitObj === 'object' && kitObj !== null) {
-      kitArreglo = Object.entries(kitObj).map(([key, item]) => {
-        if (typeof item !== 'object' || item === null) {
-          return { nombre: key, cantidad_ideal: 1 };
-        }
-        return {
-          nombre: item.nombre || key,
-          cantidad_ideal: item.cantidad_ideal || 1
-        };
-      });
+      setEditUsarTimer('_usar_timer' in kitObj ? Boolean(kitObj._usar_timer) : true);
+      kitArreglo = Object.entries(kitObj)
+        .filter(([key]) => !key.startsWith('_'))
+        .map(([key, item]) => {
+          if (typeof item !== 'object' || item === null) {
+            return { nombre: key, cantidad_ideal: 1 };
+          }
+          return {
+            nombre: item.nombre || key,
+            cantidad_ideal: item.cantidad_ideal || 1
+          };
+        });
     }
     setEditKitList(kitArreglo);
   };
@@ -234,6 +239,18 @@ export default function ResumenMesas() {
                   onChange={(e) => setEditNotas(e.target.value)}
                   placeholder="Ej. El generador tiene el botón atascado..."
                 />
+              </div>
+
+              <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', padding: '0.75rem 1rem', borderRadius: '8px', marginBottom: '1rem' }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', cursor: 'pointer', fontWeight: 700, color: '#1e3a8a', fontSize: '0.9rem' }}>
+                  <input
+                    type="checkbox"
+                    checked={editUsarTimer}
+                    onChange={(e) => setEditUsarTimer(e.target.checked)}
+                    style={{ width: '18px', height: '18px', accentColor: '#1e40af' }}
+                  />
+                  Usar temporizador de fin de clase (Bloques de 2h: cierre automático a las :45)
+                </label>
               </div>
 
               <div className={styles.seccionKit}>

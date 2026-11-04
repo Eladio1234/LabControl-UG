@@ -28,17 +28,34 @@ const parsearKit = (kitObj) => {
     }));
   }
   if (typeof obj === 'object' && obj !== null) {
-    return Object.entries(obj).map(([key, item]) => {
-      if (typeof item !== 'object' || item === null) {
-        return { nombre: key, cantidad_ideal: 1 };
-      }
-      return {
-        nombre: item.nombre || key,
-        cantidad_ideal: item.cantidad_ideal ?? 1
-      };
-    });
+    return Object.entries(obj)
+      .filter(([key]) => !key.startsWith('_'))
+      .map(([key, item]) => {
+        if (typeof item !== 'object' || item === null) {
+          return { nombre: key, cantidad_ideal: 1 };
+        }
+        return {
+          nombre: item.nombre || key,
+          cantidad_ideal: item.cantidad_ideal ?? 1
+        };
+      });
   }
   return [];
+};
+
+const leerUsarTimer = (kitObj) => {
+  if (!kitObj) return true;
+  let obj = kitObj;
+  if (typeof obj === 'string') {
+    try { obj = JSON.parse(obj); } catch (e) {}
+    if (typeof obj === 'string') {
+      try { obj = JSON.parse(obj); } catch (e) {}
+    }
+  }
+  if (typeof obj === 'object' && obj !== null && '_usar_timer' in obj) {
+    return Boolean(obj._usar_timer);
+  }
+  return true;
 };
 
 export default function ModalMesa({ onClose, onSaveSuccess, mesaAEditar = null }) {
@@ -57,6 +74,7 @@ export default function ModalMesa({ onClose, onSaveSuccess, mesaAEditar = null }
   });
 
   const [kitList, setKitList] = useState(KIT_BASE_MESA);
+  const [usarTimer, setUsarTimer] = useState(true);
   const [guardando, setGuardando] = useState(false);
   const [error, setError] = useState(null);
 
@@ -77,8 +95,10 @@ export default function ModalMesa({ onClose, onSaveSuccess, mesaAEditar = null }
           });
           const kitActual = parsearKit(mesaAEditar.kit_accesorios);
           setKitList(kitActual.length > 0 ? kitActual : KIT_BASE_MESA);
+          setUsarTimer(leerUsarTimer(mesaAEditar.kit_accesorios));
         } else {
           setKitList(KIT_BASE_MESA.map(item => ({ ...item })));
+          setUsarTimer(true);
         }
       } catch (err) { 
         console.error(err); 
@@ -112,7 +132,7 @@ export default function ModalMesa({ onClose, onSaveSuccess, mesaAEditar = null }
     e.preventDefault();
     setGuardando(true);
     try {
-      const kitJSON = {};
+      const kitJSON = { _usar_timer: usarTimer };
       kitList.forEach(item => {
         if (item.nombre && item.nombre.trim() !== '') {
           const idInterno = item.nombre.trim().toLowerCase().replace(/\s+/g, '_');
@@ -213,6 +233,23 @@ export default function ModalMesa({ onClose, onSaveSuccess, mesaAEditar = null }
                 }
               </select>
             </div>
+          </div>
+
+          {/* Configuración de Temporizador de Corte de Clase */}
+          <div className={styles.timerConfigBox}>
+            <label className={styles.timerSwitchLabel}>
+              <input
+                type="checkbox"
+                checked={usarTimer}
+                onChange={(e) => setUsarTimer(e.target.checked)}
+              />
+              <div>
+                <strong>Usar temporizador de fin de clase (Bloques de 2h: 8:00 a 18:00)</strong>
+                <p>
+                  Si está activo, la sesión del alumno mostrará la cuenta regresiva y pasará automáticamente a Revisión 15 min antes del fin de clase (09:45, 11:45, 13:45, 15:45, 17:45).
+                </p>
+              </div>
+            </label>
           </div>
 
           {/* Sección de edición de materiales genéricos / kit de accesorios */}

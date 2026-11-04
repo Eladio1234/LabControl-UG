@@ -48,6 +48,7 @@ export const sesionController = {
           nombre_profesor,
           materia,
           nip,
+          hora_entrada: new Date().toISOString(),
           estado_sesion: 'activa',
           osc1_entrada: osc1,
           osc2_entrada: osc2,
@@ -186,7 +187,7 @@ export const sesionController = {
         .from('sesiones_laboratorio')
         .select('*')
         .eq('mesa_id', mesa_id)
-        .in('estado_sesion', ['esperando_admin', 'activa', 'en_uso'])
+        .in('estado_sesion', ['solicitada', 'esperando_admin', 'activa', 'en_uso', 'finalizada_alumno'])
         .maybeSingle();
 
       if (error) {

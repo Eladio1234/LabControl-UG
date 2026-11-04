@@ -1,6 +1,56 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import styles from './VistaAlumno.module.css';
+
+// Lee si la mesa tiene habilitado el temporizador de corte de clase (por defecto true)
+const mesaUsaTimer = (kitObj) => {
+  if (!kitObj) return true;
+  let obj = kitObj;
+  if (typeof obj === 'string') {
+    try { obj = JSON.parse(obj); } catch (e) {}
+    if (typeof obj === 'string') {
+      try { obj = JSON.parse(obj); } catch (e) {}
+    }
+  }
+  if (typeof obj === 'object' && obj !== null && '_usar_timer' in obj) {
+    return Boolean(obj._usar_timer);
+  }
+  return true;
+};
+
+// Calcula el bloque de 2 horas (de 8:00 a 18:00) y la hora exacta de corte (15 min antes del fin: 09:45, 11:45, 13:45, 15:45, 17:45)
+const calcularInfoCorteClase = (ahora = new Date()) => {
+  const h = ahora.getHours();
+  if (h < 8 || h >= 18) return null;
+  const inicioHora = h % 2 === 0 ? h : h - 1;
+  const finHora = inicioHora + 2;
+  const corte = new Date(ahora);
+  corte.setHours(finHora - 1, 45, 0, 0);
+
+  // Si ya pasamos el minuto :45 del bloque actual (ej. entre 09:45 y 09:59), el corte activo ya se alcanzó
+  const segundosRestantes = Math.max(0, Math.floor((corte.getTime() - ahora.getTime()) / 1000));
+  const horaCorteTexto = `${String(finHora - 1).padStart(2, '0')}:45`;
+  const bloqueTexto = `${String(inicioHora).padStart(2, '0')}:00 - ${String(finHora).padStart(2, '0')}:00`;
+
+  return {
+    corte,
+    segundosRestantes,
+    horaCorteTexto,
+    bloqueTexto,
+    enVentanaRevision: ahora >= corte
+  };
+};
+
+// Formatea segundos a HH:MM:SS o MM:SS
+const formatearCuentaRegresiva = (segundos) => {
+  const hrs = Math.floor(segundos / 3600);
+  const mins = Math.floor((segundos % 3600) / 60);
+  const secs = segundos % 60;
+  if (hrs > 0) {
+    return `${String(hrs).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+  }
+  return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+};
 
 const EquipoCard = ({ equipo, tipo }) => {
   if (!equipo) return null;
@@ -33,8 +83,11 @@ export default function VistaAlumno() {
   const [nipIntento, setNipIntento] = useState('');
   const [errorNip, setErrorNip] = useState('');
 
-  // Estado para el tiempo restante en segundos (10 minutos = 600 segundos)
+  // Estado para el tiempo restante en segundos del formulario inicial (10 minutos = 600 segundos)
   const [tiempoRestante, setTiempoRestante] = useState(600);
+
+  // Estado para el contador del bloque de clase (cierre 15 min antes de las 2 horas)
+  const [infoClase, setInfoClase] = useState(() => calcularInfoCorteClase(new Date()));
 
   const [formEntrada, setFormEntrada] = useState({
     nombre_profesor: '',
@@ -67,7 +120,15 @@ export default function VistaAlumno() {
           if (sesionRecuperada) { 
             setIdSesion(sesionRecuperada.id);
             setSesionActual(sesionRecuperada);
-            setEstado(sesionRecuperada.estado_sesion); 
+            if (sesionRecuperada.estado_sesion === 'solicitada') {
+              setEstado('esperando_admin');
+            } else if (sesionRecuperada.estado_sesion === 'finalizada_alumno') {
+              setEstado('finalizado');
+            } else if (sesionRecuperada.estado_sesion === 'activa' && !sesionRecuperada.nip) {
+              setEstado('formulario_entrada');
+            } else {
+              setEstado(sesionRecuperada.estado_sesion);
+            }
           }
         }
       } catch (error) { 
@@ -86,9 +147,10 @@ export default function VistaAlumno() {
         try {
           const res = await fetch(`http://localhost:3000/api/sesiones/${idSesion}`);
           if (!res.ok) return;
-          const sesionActual = await res.json();
-          if (sesionActual.estado_sesion === 'activa') setEstado('formulario_entrada');
-          else if (['expirada', 'cerrada'].includes(sesionActual.estado_sesion)) {
+          const sesion = await res.json();
+          setSesionActual(sesion);
+          if (sesion.estado_sesion === 'activa') setEstado('formulario_entrada');
+          else if (['expirada', 'cerrada', 'cancelada'].includes(sesion.estado_sesion)) {
             setMensajeError('Tu solicitud ha sido cancelada o expiró.');
             setEstado('formulario');
           }
@@ -100,15 +162,37 @@ export default function VistaAlumno() {
     return () => clearInterval(intervalo);
   }, [estado, idSesion]);
 
-  // Temporizador de 10 minutos visible y controlado por segundo
+  // Polling mientras la sesión está activa o en revisión para sincronizar si el admin o el cron cambian el estado
+  useEffect(() => {
+    let intervalo;
+    if ((estado === 'activa' || estado === 'finalizado') && idSesion) {
+      intervalo = setInterval(async () => {
+        try {
+          const res = await fetch(`http://localhost:3000/api/sesiones/${idSesion}`);
+          if (!res.ok) return;
+          const sesion = await res.json();
+          setSesionActual(sesion);
+          if (sesion.estado_sesion === 'finalizada_alumno' && estado !== 'finalizado') {
+            setEstado('finalizado');
+          } else if (sesion.estado_sesion === 'cerrada') {
+            window.location.reload();
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }, 5000);
+    }
+    return () => clearInterval(intervalo);
+  }, [estado, idSesion]);
+
+  // Temporizador de 10 minutos visible y controlado por segundo en validación de equipo
   useEffect(() => {
     let timerExpulsion;
     let cuentaRegresiva;
 
     if (estado === 'formulario_entrada') {
-      setTiempoRestante(600); // Reiniciar a 10 minutos exactos al entrar
+      setTiempoRestante(600);
 
-      // Reduce el contador cada segundo
       cuentaRegresiva = setInterval(() => {
         setTiempoRestante((prev) => {
           if (prev <= 1) {
@@ -119,7 +203,6 @@ export default function VistaAlumno() {
         });
       }, 1000);
 
-      // Expulsa al usuario al cumplirse los 10 minutos
       timerExpulsion = setTimeout(() => {
         alert("Tiempo límite de 10 minutos superado.");
         window.location.reload(); 
@@ -139,22 +222,51 @@ export default function VistaAlumno() {
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
-  // Temporizador 2: Alerta a la hora y media (faltan 30 min)
-  useEffect(() => {
-    let avisoCierre;
-    if (estado === 'activa' && sesionActual?.hora_entrada) {
-      const tiempoInicio = new Date(sesionActual.hora_entrada).getTime();
-      const tiempoTranscurrido = Date.now() - tiempoInicio;
-      const tiempoAviso = (90 * 60000) - tiempoTranscurrido; 
-
-      if (tiempoAviso > 0) {
-        avisoCierre = setTimeout(() => {
-          alert("⚠️ Quedan 30 minutos para finalizar. Comienza a guardar cables y solicita revisión.");
-        }, tiempoAviso);
-      }
+  // Libera automáticamente la sesión para pasar a modo revisión cuando llega el corte (:45)
+  const pasarAModoRevisionAutomatico = useCallback(async () => {
+    if (!idSesion || estado !== 'activa') return;
+    try {
+      await fetch(`http://localhost:3000/api/sesiones/${idSesion}/liberar`, { 
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nota_alumno: notaAlumno || 'Cierre automático por corte de horario de clase (15 min antes de finalizar el bloque).' }) 
+      });
+      setEstado('finalizado');
+    } catch (error) {
+      console.error('Error al pasar a revisión automática:', error);
     }
-    return () => clearTimeout(avisoCierre);
-  }, [estado, sesionActual]);
+  }, [idSesion, estado, notaAlumno]);
+
+  const timerHabilitadoEnMesa = mesaUsaTimer(datosMesa?.kit_accesorios);
+
+  // Reloj de cuenta regresiva del bloque de 2 horas (8:00 a 18:00, corte a las 09:45, 11:45, 13:45, 15:45, 17:45)
+  useEffect(() => {
+    if (!timerHabilitadoEnMesa) return;
+
+    const tick = () => {
+      const ahora = new Date();
+      const info = calcularInfoCorteClase(ahora);
+      setInfoClase(info);
+
+      if (estado === 'activa' && sesionActual) {
+        const inicioSesion = new Date(sesionActual.hora_entrada || sesionActual.created_at || ahora);
+        const hInicio = inicioSesion.getHours();
+        if (hInicio >= 8 && hInicio < 18) {
+          const finHora = hInicio % 2 === 0 ? hInicio + 2 : hInicio + 1;
+          const corteSesion = new Date(inicioSesion);
+          corteSesion.setHours(finHora - 1, 45, 0, 0);
+
+          if (ahora >= corteSesion) {
+            pasarAModoRevisionAutomatico();
+          }
+        }
+      }
+    };
+
+    tick();
+    const interval = setInterval(tick, 1000);
+    return () => clearInterval(interval);
+  }, [timerHabilitadoEnMesa, estado, sesionActual, pasarAModoRevisionAutomatico]);
 
   const handleSolicitar = async (e) => {
     e.preventDefault();
@@ -168,6 +280,7 @@ export default function VistaAlumno() {
       const datos = await res.json();
       if (!res.ok) throw new Error(datos.error);
       setIdSesion(datos.data.id);
+      setSesionActual(datos.data);
       setEstado('esperando_admin');
     } catch (error) {
       setMensajeError(error.message);
@@ -181,7 +294,7 @@ export default function VistaAlumno() {
     
     setEstado('cargando');
     try {
-      await fetch(`http://localhost:3000/api/sesiones/${idSesion}/entrada`, {
+      const res = await fetch(`http://localhost:3000/api/sesiones/${idSesion}/entrada`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -194,8 +307,10 @@ export default function VistaAlumno() {
           nip: formEntrada.nip
         })
       });
+      const json = await res.json().catch(() => ({}));
+      const registroActualizado = json?.data?.[0] || { ...sesionActual, nip: formEntrada.nip, hora_entrada: new Date().toISOString() };
       
-      setSesionActual({ ...sesionActual, nip: formEntrada.nip }); 
+      setSesionActual(registroActualizado); 
       setDesbloqueado(true); 
       setEstado('activa');
     } catch (error) { 
@@ -216,16 +331,46 @@ export default function VistaAlumno() {
       setEstado('finalizado');
     } catch (error) { 
       alert(error.message); 
-      setEstado('en_uso'); 
+      setEstado('activa'); 
     }
+  };
+
+  // Renderizador del banner del contador de clase (visible si la mesa tiene activo el timer y estamos entre 8:00 y 18:00)
+  const renderContadorClase = () => {
+    if (!timerHabilitadoEnMesa || !infoClase) return null;
+    const urgente = infoClase.segundosRestantes <= 600; // Últimos 10 min en rojo
+    return (
+      <div
+        style={{
+          background: urgente ? '#fef2f2' : '#eff6ff',
+          border: `1.5px solid ${urgente ? '#f87171' : '#93c5fd'}`,
+          padding: '0.85rem 1.1rem',
+          borderRadius: '10px',
+          marginBottom: '1.25rem',
+          textAlign: 'center'
+        }}
+      >
+        <span style={{ fontSize: '0.75rem', fontWeight: 800, color: urgente ? '#991b1b' : '#1e40af', display: 'block', letterSpacing: '0.5px' }}>
+          ⏱️ TIEMPO RESTANTE DE LA SESIÓN (BLOQUE {infoClase.bloqueTexto})
+        </span>
+        <span style={{ fontSize: '1.8rem', fontFamily: 'monospace', fontWeight: 800, color: urgente ? '#dc2626' : '#1e3a8a', display: 'block', margin: '0.2rem 0' }}>
+          {formatearCuentaRegresiva(infoClase.segundosRestantes)}
+        </span>
+        <span style={{ fontSize: '0.78rem', color: '#475569' }}>
+          La sesión pasará automáticamente a <strong>Revisión</strong> a las <strong>{infoClase.horaCorteTexto} hrs</strong> (15 min antes del fin de clase).
+        </span>
+      </div>
+    );
   };
 
   if (estado === 'finalizado') return (
     <div className={styles.pantallaCompleta}>
       <div className={styles.tarjetaCentrada}>
         <div className={styles.iconoGrande}>👋</div>
-        <h3 className={styles.tituloCentrado}>Práctica Terminada</h3>
-        <p className={styles.textoSecundario}>Mesa {mesaId.replace(/MESA[-_ ]?/i, '')} en revisión.</p>
+        <h3 className={styles.tituloCentrado}>Práctica en Modo Revisión</h3>
+        <p className={styles.textoSecundario}>
+          Mesa {mesaId.replace(/MESA[-_ ]?/i, '')} lista para revisión del administrador. Una vez liberada quedará disponible para el siguiente bloque de clase.
+        </p>
       </div>
     </div>
   );
@@ -237,6 +382,7 @@ export default function VistaAlumno() {
           <div className={styles.tarjetaCentrada}>
             <div className={styles.iconoGrande}>🔒</div>
             <h3 className={styles.tituloCentrado}>Mesa Protegida</h3>
+            {renderContadorClase()}
             <p className={styles.textoSecundario}>Ingresa el NIP de tu equipo para retomar la práctica.</p>
             <input 
               type="password" 
@@ -271,6 +417,7 @@ export default function VistaAlumno() {
         <div className={styles.tarjetaCentrada}>
           <div className={styles.iconoGrande}>🔬</div>
           <h3 className={styles.tituloCentrado}>Sesión en Curso</h3>
+          {renderContadorClase()}
           <div className={styles.seccionObservaciones}>
             <label className={styles.labelForm}>
               Observaciones durante la práctica (Opcional):
@@ -295,6 +442,7 @@ export default function VistaAlumno() {
       <div className={styles.tarjetaCentrada}>
         <div className={styles.iconoGrande}>⏳</div>
         <h3 className={styles.tituloCentrado}>Petición Enviada</h3>
+        {renderContadorClase()}
         <p className={styles.textoSecundario}>Por favor, dirígete con el administrador para que asigne tu mesa.</p>
       </div>
     </div>
@@ -303,19 +451,21 @@ export default function VistaAlumno() {
   if (estado === 'formulario_entrada') return (
     <div className={styles.pantallaCompleta}>
       <div className={styles.tarjetaAncha}>
-        <div className={styles.headerFormulario} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div className={styles.headerFormulario} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
           <div>
             <h1>Validación de Equipo</h1>
             <p>Prueba los accesorios antes de iniciar.</p>
           </div>
-          {/* Visualizador del contador regresivo */}
+          {/* Visualizador del contador regresivo de validación (10 min) */}
           <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', padding: '0.5rem 1rem', borderRadius: '8px', textAlign: 'center' }}>
-            <span style={{ fontSize: '0.75rem', color: '#1e40af', display: 'block', fontWeight: 'bold' }}>TIEMPO RESTANTE</span>
+            <span style={{ fontSize: '0.75rem', color: '#1e40af', display: 'block', fontWeight: 'bold' }}>TIEMPO P/ VALIDAR</span>
             <span style={{ fontSize: '1.25rem', fontFamily: 'monospace', fontWeight: 'bold', color: tiempoRestante < 60 ? '#dc2626' : '#1e3a8a' }}>
               {formatearTiempo(tiempoRestante)}
             </span>
           </div>
         </div>
+
+        {renderContadorClase()}
         
         <form onSubmit={handleEntradaSubmit} className={styles.formulario}>
           <div className={styles.filaInputs}>
@@ -398,7 +548,11 @@ export default function VistaAlumno() {
     </div>
   );
 
-  const kitArray = datosMesa?.kit_accesorios ? Object.values(datosMesa.kit_accesorios) : [];
+  const kitArray = datosMesa?.kit_accesorios
+    ? Object.entries(datosMesa.kit_accesorios)
+        .filter(([key]) => !key.startsWith('_'))
+        .map(([, val]) => val)
+    : [];
 
   return (
     <div className={styles.pantallaCompleta}>
@@ -415,6 +569,8 @@ export default function VistaAlumno() {
           <p className={styles.textoCargando}>Cargando inventario...</p>
         ) : (
           <>
+            {renderContadorClase()}
+
             <h3 className={styles.seccionTitulo}>Equipamiento Principal</h3>
             <div className={styles.gridEquipo}>
               <EquipoCard equipo={datosMesa?.osciloscopio} tipo="Osciloscopio" />
